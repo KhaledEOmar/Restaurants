@@ -1,0 +1,24 @@
+<html>
+
+<body>
+
+<h1>Edit Menu Item</h1>
+
+
+
+<div>
+
+	<form action = {{url_for('newMenuItem', restaurant_id = restaurant_id)}}	method = "POST">
+		<p>Item Name: <input type = "text" name = "ItemName" /></p>
+		<p>Description: <input type = "text" name = "Description" /></p>
+		<p>Price: <input type = "text" name = "Price" /></p>
+		<p>Course: <input type = "text" name = "Course" /></p>
+    	<input type="submit" value="Submit">
+	</form>
+
+</div>
+
+
+</body>
+
+</html>
