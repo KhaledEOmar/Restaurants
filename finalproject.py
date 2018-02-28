@@ -18,12 +18,14 @@ session = DBSession()
 def showRestaurants():
     restaurants = session.query(Restaurant).all()
     return render_template('restaurants.html', restaurants = restaurants)
-
-#NEEDS POST TO WORK
+#WORKS
 @app.route('/restaurant/new', methods=['GET', 'POST'])
 def newRestaurant():
     if request.method == 'POST':
-        restaurantName = flask.request.values.get('RestaurantName')
+        restaurantName = Restaurant(name = request.values.get('RestaurantName'))
+        session.add(restaurantName)
+        session.commit()
+        return redirect("", code=302)
     else:
         return render_template('newRestaurant.html')
 
