@@ -35,11 +35,17 @@ def editRestaurant(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
     return render_template('editRestaurant.html', restaurant = restaurant, restaurant_id = restaurant_id)
 
-#NEEDS DELETE TO WORK
-@app.route('/restaurant/<int:restaurant_id>/delete')
+#Works
+@app.route('/restaurant/<int:restaurant_id>/delete', methods=['GET', 'POST'])
 def deleteRestaurant(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
-    return render_template('deleteRestaurant.html', restaurant = restaurant, restaurant_id = restaurant_id)
+    if request.method == 'POST':
+        restaurant = session.query(Restaurant).filter_by(id=restaurant_id).first()
+        session.delete(restaurant)
+        session.commit()
+        return redirect("", code=302)
+    else:
+        restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
+        return render_template('deleteRestaurant.html', restaurant = restaurant)
 
 #WORKS PERFECTLY
 @app.route('/restaurant/<int:restaurant_id>')
