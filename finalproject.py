@@ -30,10 +30,18 @@ def newRestaurant():
         return render_template('newRestaurant.html')
 
 #NEEDS UPDATE TO WORK
-@app.route('/restaurant/<int:restaurant_id>/edit')
+@app.route('/restaurant/<int:restaurant_id>/edit', methods=['GET', 'POST'])
 def editRestaurant(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
-    return render_template('editRestaurant.html', restaurant = restaurant, restaurant_id = restaurant_id)
+    if request.method == 'POST':
+        restaurantName = Restaurant(name = request.values.get('RestaurantName'))
+        restaurant = session.query(Restaurant).filter_by(id=restaurant_id).first()
+        restaurant.name = restaurantName
+        session.add(restaurant)
+        session.commit()
+        return redirect("", code=302)
+    else:
+        restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
+        return render_template('editRestaurant.html', restaurant = restaurant)
 
 #Works
 @app.route('/restaurant/<int:restaurant_id>/delete', methods=['GET', 'POST'])

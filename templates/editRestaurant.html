@@ -8,7 +8,7 @@
 
 <div>
 
-	<form action = {{url_for('newRestaurant')}}	method = "UPDATE">
+	<form action = {{url_for('editRestaurant', restaurant_id = restaurant.id)}} method = "POST">
 		<p>Restaurant Name: <input type = "text" name = "RestaurantName" /></p>
     	<input type="submit" value="Submit">
 	</form>
