@@ -7,12 +7,11 @@
 
 
 <div>
-
-	<form action = {{url_for('newMenuItem', restaurant_id = restaurant_id)}}	method = "POST">
-		<p>Item Name: <input type = "text" name = "ItemName" /></p>
-		<p>Description: <input type = "text" name = "Description" /></p>
-		<p>Price: <input type = "text" name = "Price" /></p>
-		<p>Course: <input type = "text" name = "Course" /></p>
+	<form action = {{url_for('editMenuItem', restaurant_id = restaurant_id, menu_id = menu_id)}}	method = "POST">
+		<p>Item Name: <input type = "text" name = "ItemName" value = '{{item.name}}' /></p>
+		<p>Description: <input type = "text" name = "Description" value = '{{item.description}}' /></p>
+		<p>Price: <input type = "text" name = "Price" value = '{{item.price}}' /></p>
+		<p>Course: <input type = "text" name = "Course" value = '{{item.course}}' /></p>
     	<input type="submit" value="Submit">
 	</form>
 

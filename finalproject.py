@@ -34,8 +34,7 @@ def newRestaurant():
 def editRestaurant(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
     if request.method == 'POST':
-        restaurantName = request.values.get('RestaurantName')
-        restaurant.name = restaurantName
+        restaurant.name = request.values.get('RestaurantName')
         session.commit()
         return redirect("", code=302)
     else:
@@ -53,7 +52,7 @@ def deleteRestaurant(restaurant_id):
         restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
         return render_template('deleteRestaurant.html', restaurant = restaurant)
 
-#WORKS PERFECTLY
+#WORKS
 @app.route('/restaurant/<int:restaurant_id>')
 @app.route('/restaurant/<int:restaurant_id>/menu')
 def showMenu(restaurant_id):
@@ -67,16 +66,25 @@ def newMenuItem(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
     return render_template('newMenuItem.html', restaurant = restaurant, restaurant_id = restaurant_id)
 
-#NEEDS UPDATE TO WORK
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit')
+#WORKS
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit', methods=['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_id):
     item = session.query(MenuItem).filter_by(id = menu_id).first()
-    return render_template('editMenuItem.html', item = item, restaurant_id = restaurant_id, menu_id = menu_id)
+    if request.method == 'POST':
+        item.name = request.values.get('ItemName')
+        item.description = request.values.get('Description')
+        item.price = request.values.get('Price')
+        item.course = request.values.get('Course')
+        session.commit()
+        return redirect("", code=302)
+    else:
+        return render_template('editMenuItem.html', item = item, restaurant_id = restaurant_id, menu_id = menu_id)
 
 #NEEDS DELETE TO WORK
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete')
 def deleteMenuItem(restaurant_id, menu_id):
     return render_template('deleteMenuItem.html', restaurant_id = restaurant_id, menu_id = menu_id)
+
 
 if __name__ == '__main__':
     app.debug = True
