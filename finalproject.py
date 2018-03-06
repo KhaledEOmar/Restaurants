@@ -80,10 +80,13 @@ def editMenuItem(restaurant_id, menu_id):
     else:
         return render_template('editMenuItem.html', item = item, restaurant_id = restaurant_id, menu_id = menu_id)
 
-#NEEDS DELETE TO WORK
+#WORKS
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete')
 def deleteMenuItem(restaurant_id, menu_id):
-    return render_template('deleteMenuItem.html', restaurant_id = restaurant_id, menu_id = menu_id)
+        item = session.query(MenuItem).filter_by(id = menu_id).first()
+        session.delete(item)
+        session.commit()
+        return redirect("", code=302)
 
 
 if __name__ == '__main__':
