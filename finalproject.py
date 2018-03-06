@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
@@ -90,6 +90,23 @@ def deleteMenuItem(restaurant_id, menu_id):
         session.commit()
         return redirect("", code=302)
 
+@app.route('/restaurant/JSON')
+def restaurantsJSON():
+    restaurant = session.query(Restaurant).all()
+    return jsonify(Restaurants = [i.serialize for i in restaurant])
+
+@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
+def restaurantsMenuJSON(restaurant_id):
+    menu = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+    return jsonify(MenuItems = [i.serialize for i in menu])
+
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
+def restaurantsMenuItemJSON(restaurant_id, menu_id):
+    menu = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
+    for i in menu:
+        if i.restaurant_id == restaurant_id and i.id == menu_id:
+            return jsonify(i.serialize)
+    return "No Item"
 
 if __name__ == '__main__':
     app.debug = True
