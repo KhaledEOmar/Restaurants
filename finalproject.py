@@ -12,7 +12,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-#WORKS PERFECTLY
+#WORKS
 @app.route('/')
 @app.route('/restaurants')
 def showRestaurants():
@@ -29,21 +29,19 @@ def newRestaurant():
     else:
         return render_template('newRestaurant.html')
 
-#NEEDS UPDATE TO WORK
+#WORKS
 @app.route('/restaurant/<int:restaurant_id>/edit', methods=['GET', 'POST'])
 def editRestaurant(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
     if request.method == 'POST':
-        restaurantName = Restaurant(name = request.values.get('RestaurantName'))
-        restaurant = session.query(Restaurant).filter_by(id=restaurant_id).first()
+        restaurantName = request.values.get('RestaurantName')
         restaurant.name = restaurantName
-        session.add(restaurant)
         session.commit()
         return redirect("", code=302)
     else:
-        restaurant = session.query(Restaurant).filter_by(id = restaurant_id).first()
         return render_template('editRestaurant.html', restaurant = restaurant)
 
-#Works
+#WORKS
 @app.route('/restaurant/<int:restaurant_id>/delete', methods=['GET', 'POST'])
 def deleteRestaurant(restaurant_id):
     if request.method == 'POST':
