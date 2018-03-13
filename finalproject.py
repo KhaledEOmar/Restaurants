@@ -5,6 +5,7 @@ from database_setup import Base, Restaurant, MenuItem
 
 
 app = Flask(__name__)
+app.secret_key = 'some_secret'
 
 engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.bind = engine
@@ -25,6 +26,7 @@ def newRestaurant():
         restaurantName = Restaurant(name = request.values.get('RestaurantName'))
         session.add(restaurantName)
         session.commit()
+        flash('New Restaurant Created')
         return redirect("", code=302)
     else:
         return render_template('newRestaurant.html')
@@ -36,6 +38,7 @@ def editRestaurant(restaurant_id):
     if request.method == 'POST':
         restaurant.name = request.values.get('RestaurantName')
         session.commit()
+        flash('Restaurant Successfully Edited')
         return redirect("", code=302)
     else:
         return render_template('editRestaurant.html', restaurant = restaurant)
@@ -46,6 +49,7 @@ def deleteRestaurant(restaurant_id):
         restaurant = session.query(Restaurant).filter_by(id=restaurant_id).first()
         session.delete(restaurant)
         session.commit()
+        flash('Restaurant Successfully Deleted')
         return redirect("", code=302)
 
 #WORKS
@@ -64,6 +68,7 @@ def newMenuItem(restaurant_id):
         Item = MenuItem(name = request.values.get('ItemName'), description = request.values.get('Description'), price = request.values.get('Price'), course = request.values.get('Course'), restaurant = restaurant)
         session.add(Item)
         session.commit()
+        flash('New Menu Item Created')
         return redirect("", code=302)
     else:
         return render_template('newMenuItem.html', restaurant = restaurant, restaurant_id = restaurant_id)
@@ -78,6 +83,7 @@ def editMenuItem(restaurant_id, menu_id):
         item.price = request.values.get('Price')
         item.course = request.values.get('Course')
         session.commit()
+        flash('Menu Item Successfully Edited')
         return redirect("", code=302)
     else:
         return render_template('editMenuItem.html', item = item, restaurant_id = restaurant_id, menu_id = menu_id)
@@ -88,6 +94,7 @@ def deleteMenuItem(restaurant_id, menu_id):
         item = session.query(MenuItem).filter_by(id = menu_id).first()
         session.delete(item)
         session.commit()
+        flash('Menu Item Successfully Deleted')
         return redirect("", code=302)
 
 @app.route('/restaurant/JSON')
